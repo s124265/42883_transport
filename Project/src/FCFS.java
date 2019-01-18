@@ -6,17 +6,28 @@ class FCFS {
 	public FCFS(Ship [][] V) {
 		int Obj = 0;
 		Ship [][] order = new Ship [V.length][V[0].length];
+		
+		order = solve(V);
+	}
+	
+	public Ship [][]solve (Ship[][] V) {
+		Ship [][] order = new Ship [V.length][V[0].length];
 		int [][] berthTimes = new int [V.length][V[0].length];
 		for(int i =0; i<V.length;i++) {
 			for (int j = 0; j<V[0].length; j++) {
 				berthTimes[i][j] = V[i][j].getStartBerth();
 			}
 		}
-		
 		order = getShippingPlan(V,berthTimes);
+		return order;
+		
+		
 		
 		
 	}
+		
+		
+	
 	
 	public Ship[][] getShippingPlan(Ship[][] V, int [][] berthTimes){
 		boolean [][] ShipService = new boolean[V.length][V[0].length];
@@ -27,7 +38,6 @@ class FCFS {
 			idorder[i] = Vi.getId();
 			Vi = ServiceTime(Vi,V,i,idorder,berthorder,berthTimes);
 			berthorder[i] = Vi.getBerth();
-			order[Vi.getBerth()][i] = Vi;
 			ShipService[Vi.getBerth()][Vi.getId()] = true;
 			/*System.out.print(Vi.getArrivalTime()+ " ");
 			System.out.print(Vi.getWaitingTime()+ " ");

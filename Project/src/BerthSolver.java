@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 
 public class BerthSolver {
 	Ship[][] V;
+	Ship [][] solV;
 	public BerthSolver(String filename) {
 		
 		try {
@@ -12,7 +13,6 @@ public class BerthSolver {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		Ship [][] newV = new Ship [V.length][V[0].length];
 		//for (int j = 0; j<V.length;j++) {
 		//	for(int i =0; i<V[0].length;i++) {
 		//		System.out.print(V[j][i].getHandlingTime() + " ");
@@ -20,12 +20,17 @@ public class BerthSolver {
 		//	System.out.println();
 		//}
 		
-		solve(V);
 	}
 	
-	public void solve(Ship[][] V) {
+	public void solve() {
 		FCFS sol1 = new FCFS(V);
+		solV = sol1.solve(V);
 		
+		
+	}
+	
+	public void showSolve() {
+		ScheduleViz.drawSchedule(solV);
 	}
 
 }

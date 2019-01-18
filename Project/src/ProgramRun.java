@@ -3,6 +3,8 @@ import java.io.FileNotFoundException;
 public class ProgramRun {
 	public static void main (String[] args) {
 		BerthSolver solver = new BerthSolver("25x5-01");
+		solver.solve();
+		solver.showSolve();
 		
 	}
 
