@@ -1,13 +1,40 @@
 import java.util.Arrays;
 
 class FCFS {
+	boolean [][] ShipService;
 	
 	
 	public FCFS(Ship [][] V) {
-		int Obj = 0;
+		double Obj = 0;
 		Ship [][] order = new Ship [V.length][V[0].length];
 		
 		order = solve(V);
+		//sum(duration)*sum(handlingtime)/V.length
+		Obj = ObjValue(V);
+		System.out.println(Obj);
+		
+	}
+	
+	public double ObjValue(Ship [][] V) {
+		double sol = 0;
+		int serviceTime = 0;
+		double avgHandling = 0;
+		double weight = 0;
+		for(int j =0; j<V.length;j++) {
+			for(int i=0; i<V[0].length;i++) {
+				serviceTime += V[j][i].getDuration();
+				if (ShipService[j][i] == true){
+					weight += 1*V[j][i].getHandlingTime();
+				} else {
+					weight += 0;
+				}
+			}
+		}
+		avgHandling = weight/V.length;
+		sol = serviceTime*avgHandling;
+		System.out.println(avgHandling + " " + serviceTime);
+		
+		return sol;
 	}
 	
 	public Ship [][]solve (Ship[][] V) {
@@ -18,19 +45,15 @@ class FCFS {
 				berthTimes[i][j] = V[i][j].getStartBerth();
 			}
 		}
-		order = getShippingPlan(V,berthTimes);
-		return order;
-		
-		
-		
-		
+		ShipService = new boolean[V.length][V[0].length];
+		order = getShippingPlan(V,berthTimes,ShipService);
+		return order;		
 	}
 		
 		
 	
 	
-	public Ship[][] getShippingPlan(Ship[][] V, int [][] berthTimes){
-		boolean [][] ShipService = new boolean[V.length][V[0].length];
+	public Ship[][] getShippingPlan(Ship[][] V, int [][] berthTimes,boolean [][] ShipService){
 		int [] idorder = new int [V[0].length];
 		int [] berthorder = new int [V[0].length];
 		for(int i =0; i< V[0].length; i++) {
@@ -50,7 +73,7 @@ class FCFS {
 			V[Vi.getBerth()][Vi.getId()] = Vi;
 			//System.out.print(Vi.getArrivalTime()+ " ");
 		}
-		for(int i =0; i<V.length;i++) {
+		/*for(int i =0; i<V.length;i++) {
 			for (int j = 0; j<V[0].length; j++) {
 				//System.out.print(order[i][j].getDuration() + " ");
 				//System.out.print(order[i][j].getArrivalTime() + " ");
@@ -60,12 +83,12 @@ class FCFS {
 				System.out.print(berthTimes[i][j] + " ");
 			}
 			System.out.println();
-		}
+		}*/
 		
 		
-		for (int j = 0; j<V.length; j++) {
+		/*for (int j = 0; j<V.length; j++) {
 			System.out.println(Arrays.toString(ShipService[j]));
-		}
+		}*/
 		return V;
 		
 	}

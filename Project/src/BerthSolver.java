@@ -25,6 +25,7 @@ public class BerthSolver {
 	public void solve() {
 		FCFS sol1 = new FCFS(V);
 		solV = sol1.solve(V);
+		HC sol2 = new HC(solV);
 		
 		
 	}
