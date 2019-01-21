@@ -64,5 +64,24 @@ class DataReader {
 	
 	public Ship[][] getShips(){ return V;}
 	
+	public double [] getWeights(Ship[][] V) {
+		double [] avgWeight = new double[V[0].length];
+		
+		for(int i=0;i<V[0].length;i++) {
+			int feasBerth = 0;
+			for(int j=0; j<V.length;j++) {
+				if(V[j][i].getHandlingTime()==0) {
+					feasBerth += 0;
+				} else {
+					feasBerth +=1;
+					avgWeight[i] += V[j][i].getHandlingTime();
+				}
+			}
+			avgWeight[i] = avgWeight[i]/feasBerth;
+		}
+		
+		return avgWeight;
+	}
+	
 	
 }

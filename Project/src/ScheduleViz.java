@@ -107,7 +107,6 @@ public class ScheduleViz {
 	private void drawShip(Ship [] V){
 		for(int i =0; i<V.length; i++) {
 		Ship Vi = V[i];	
-		System.out.print(Vi.getBerth()+ " ");
 		if(Vi.getDuration()==0) {
 			continue;
 		}
@@ -118,7 +117,7 @@ public class ScheduleViz {
 		StdDraw.setPenColor(this.colorSelection[Vi.getId()%colorSelection.length]);
 		StdDraw.filledRectangle(x*5, y,Vi.getDuration()/2, 30);
 		StdDraw.setPenColor(this.fontColorSelection[Vi.getId()%colorSelection.length]);
-		StdDraw.text(x*5,y,Vi.getBerth()+":"+Vi.getId());
+		StdDraw.text(x*5,y,(Vi.getBerth()+1)+":"+Vi.getId());
 		}
 		System.out.println();
 		//System.out.println(""+ x+" "+y+" "+task.getDuration()/2+" "+ task.getShip());

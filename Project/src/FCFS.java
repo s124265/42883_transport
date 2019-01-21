@@ -4,35 +4,32 @@ class FCFS {
 	boolean [][] ShipService;
 	
 	
-	public FCFS(Ship [][] V) {
+	public FCFS(Ship [][] V, double[] avgWeight) {
 		double Obj = 0;
 		Ship [][] order = new Ship [V.length][V[0].length];
 		
 		order = solve(V);
 		//sum(duration)*sum(handlingtime)/V.length
-		Obj = ObjValue(V);
+		Obj = ObjValue(V,avgWeight);
 		System.out.println(Obj);
 		
 	}
 	
-	public double ObjValue(Ship [][] V) {
+	public double ObjValue(Ship [][] V,double[] avgWeight) {
 		double sol = 0;
-		int serviceTime = 0;
 		double avgHandling = 0;
 		double weight = 0;
-		for(int j =0; j<V.length;j++) {
-			for(int i=0; i<V[0].length;i++) {
+		for(int i =0; i<V[0].length;i++) {
+			int serviceTime = 0;
+			for(int j=0; j<V.length;j++) {
 				serviceTime += V[j][i].getDuration();
-				if (ShipService[j][i] == true){
-					weight += 1*V[j][i].getHandlingTime();
-				} else {
-					weight += 0;
-				}
 			}
+			weight += serviceTime*avgWeight[i];
+			
 		}
-		avgHandling = weight/V.length;
-		sol = serviceTime*avgHandling;
-		System.out.println(avgHandling + " " + serviceTime);
+		//avgHandling = weight/V.length;
+		sol = weight;
+		//System.out.println(avgHandling + " " + serviceTime);
 		
 		return sol;
 	}
