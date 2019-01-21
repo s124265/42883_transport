@@ -35,7 +35,7 @@ public class ScheduleViz {
 	
 	Ship[][] V;
 	final int M_SIZE = 100;
-	final int L_SIZE = 120;
+	final int L_SIZE = 40;
 	int minX; 
 	int minY;
 	int maxX;
@@ -62,12 +62,12 @@ public class ScheduleViz {
 				maxXx = Math.max(maxX, task.getEndTime());
 			}
 		}
-		maxX = 300*5;
+		maxX = 300;
 		//machines+=2;//getting the number since ID is zero based
 		maxY = machines*M_SIZE;
 		
 		//Setting up the canvas
-		StdDraw.setCanvasSize((maxX+L_SIZE), maxY);
+		StdDraw.setCanvasSize((maxX*5), maxY);
 		//Setting up the scale with a border of 10 pixels
 		StdDraw.setXscale(minX-L_SIZE-10, maxX+10);
 		StdDraw.setYscale(minY-10, maxY+10);
@@ -100,7 +100,7 @@ public class ScheduleViz {
 			StdDraw.text(minX-L_SIZE/2,maxY-(m*M_SIZE)-M_SIZE/2,"Berth: "+(m+1));
 		}
 		for(int i =0; i<=6;i++) {
-			StdDraw.text(i*50*5, -10, "" + i*50);
+			StdDraw.text(i*50, -10, "" + i*50);
 		}
 	}
 	
@@ -111,15 +111,15 @@ public class ScheduleViz {
 			continue;
 		}
 		int y = maxY-Vi.getBerth() * M_SIZE-M_SIZE/2;
-		int x = Vi.getStartTime()+Vi.getDuration()/2;
+		int x = Vi.getStartTime() + Vi.getHandlingTime()/2;
 		StdDraw.setPenColor(StdDraw.BLACK);
-		StdDraw.filledRectangle(x*5, y,Vi.getDuration()/2, 30);
+		StdDraw.filledRectangle(x, y,Vi.getHandlingTime()/2, 30);
 		StdDraw.setPenColor(this.colorSelection[Vi.getId()%colorSelection.length]);
-		StdDraw.filledRectangle(x*5, y,Vi.getDuration()/2, 30);
+		StdDraw.filledRectangle(x, y,Vi.getHandlingTime()/2, 30);
 		StdDraw.setPenColor(this.fontColorSelection[Vi.getId()%colorSelection.length]);
-		StdDraw.text(x*5,y,(Vi.getBerth()+1)+":"+Vi.getId());
+		StdDraw.text(x,y,(Vi.getBerth()+1)+":"+Vi.getId());
 		}
-		System.out.println();
+		//System.out.println();
 		//System.out.println(""+ x+" "+y+" "+task.getDuration()/2+" "+ task.getShip());
 
 	}

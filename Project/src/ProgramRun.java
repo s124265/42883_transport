@@ -7,7 +7,7 @@ public class ProgramRun {
 		watch.start();
 		solver.solve();
 		System.out.println(watch.stop());
-		solver.showSolve();
+		//solver.showSolve();
 		
 	}
 

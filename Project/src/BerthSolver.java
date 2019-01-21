@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 public class BerthSolver {
 	Ship[][] V;
 	Ship [][] solV;
+	Ship [][] FCFSplot;
 	double [] avgWeight;
 	public BerthSolver(String filename) {
 		
@@ -26,14 +27,18 @@ public class BerthSolver {
 	
 	public void solve() {
 		FCFS sol1 = new FCFS(V,avgWeight);
-		solV = sol1.solve(V);
+		FCFSplot = sol1.solve(V);
+		//showSolve(FCFSplot);
+		solV = FCFSplot;
 		HC sol2 = new HC(solV,avgWeight);
+		sol2.getSolve();
+		showSolve(sol2.getSolve());
 		
 		
 	}
 	
-	public void showSolve() {
-		ScheduleViz.drawSchedule(solV);
+	public void showSolve(Ship[][] V) {
+		ScheduleViz.drawSchedule(V);
 	}
 
 }
