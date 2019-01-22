@@ -11,7 +11,7 @@ class FCFS {
 		order = solve(V);
 		//sum(duration)*sum(handlingtime)/V.length
 		Obj = ObjValue(V,avgWeight);
-		System.out.println(Obj);
+		System.out.println("Initial Solution: " + Obj);
 		
 	}
 	

@@ -31,7 +31,6 @@ public class BerthSolver {
 		//showSolve(FCFSplot);
 		solV = FCFSplot;
 		HC sol2 = new HC(solV,avgWeight);
-		sol2.getSolve();
 		showSolve(sol2.getSolve());
 		
 		

@@ -12,7 +12,6 @@ public class ScheduleViz {
 		Color.PINK,
 		Color.LIGHT_GRAY,
 		Color.RED,
-		Color.WHITE,
 		Color.YELLOW,
 		Color.GRAY,
 		Color.DARK_GRAY
@@ -59,10 +58,9 @@ public class ScheduleViz {
 		//Find the bounding box of the drawing
 		for(Ship[] Vi: V){
 			for(Ship task : Vi){
-				maxXx = Math.max(maxX, task.getEndTime());
+				maxX = Math.max(maxX, task.getEndBerth());
 			}
 		}
-		maxX = 300;
 		//machines+=2;//getting the number since ID is zero based
 		maxY = machines*M_SIZE;
 		
@@ -107,7 +105,7 @@ public class ScheduleViz {
 	private void drawShip(Ship [] V){
 		for(int i =0; i<V.length; i++) {
 		Ship Vi = V[i];	
-		if(Vi.getDuration()==0) {
+		if(Vi.getDuration()<=0) {
 			continue;
 		}
 		int y = maxY-Vi.getBerth() * M_SIZE-M_SIZE/2;
@@ -118,6 +116,10 @@ public class ScheduleViz {
 		StdDraw.filledRectangle(x, y,Vi.getHandlingTime()/2, 30);
 		StdDraw.setPenColor(this.fontColorSelection[Vi.getId()%colorSelection.length]);
 		StdDraw.text(x,y,(Vi.getBerth()+1)+":"+Vi.getId());
+		
+		StdDraw.setPenColor(this.fontColorSelection[Vi.getId()%colorSelection.length]);
+		
+		StdDraw.line(Vi.getArrivalTime(), y+i,Vi.getStartTime(), y+i);
 		}
 		//System.out.println();
 		//System.out.println(""+ x+" "+y+" "+task.getDuration()/2+" "+ task.getShip());

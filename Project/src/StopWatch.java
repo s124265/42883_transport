@@ -18,7 +18,7 @@ class StopWatch {
 	public double lap() {
 		if (startTime ==-1) {
 			throw new RuntimeException("The stop watch must be started before it can be stopped");}
-			return (System.currentTimeMillis()-startTime)/1000;
+			return (System.currentTimeMillis()-startTime);
 		}
 	
 	

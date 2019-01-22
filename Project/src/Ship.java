@@ -21,6 +21,21 @@ class Ship {
 		id = -1;
 		handlingTime = 1000000;
 	}
+	public Ship (Ship S) {
+		arrivalTime = S.arrivalTime;
+		handlingTime = S.handlingTime;
+		startTime = S.startTime;
+		endTime = S.endTime;
+		waitingTime = S.waitingTime;
+		duration = S.duration;
+		id = S.id;
+		berth = S.berth;
+		startBerth = S.startBerth;
+		endBerth = S.endBerth;
+	}
+	public Ship(Ship [][] S){
+		
+	}
 	
 	public int getArrivalTime() {
 		return arrivalTime;

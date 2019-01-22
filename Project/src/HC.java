@@ -15,44 +15,69 @@ import java.util.*;
 class HC {
 	boolean [][] ShipService;
 	Ship [][] bestSolution;
+	Ship [][] InitSolution;
 	
 	
-	public HC(Ship [][] V,double [] avgWeight) {
-		boolean [][] InitService = new boolean [V.length][V[0].length];
-		for(int j=0; j<V.length;j++) {
-			for(int i=0;i<V[0].length;i++) {
-				if(V[j][i].getDuration()>0) {
-					InitService[j][i] = true;
+	public HC(Ship [][] Init,double [] avgWeight) {
+		//boolean [][] InitService = new boolean [V.length][V[0].length];
+		InitSolution = new Ship[Init.length][Init[0].length];
+		for(int j=0; j<Init.length;j++) {
+			for(int i=0;i<Init[0].length;i++) {
+					InitSolution[j][i] = new Ship(Init[j][i]);
 				}
 			}
-		}
-		double Obj = solve(V,InitService,avgWeight);
+		
+		double Obj = solve(InitSolution,avgWeight);
 		//System.out.print(Obj);
 	}
 	
 	public Ship[][] getSolve() {return bestSolution;}
 		
-	public double solve(Ship[][] V,boolean [][] ShipService, double [] avgWeight) {
+	public double solve(Ship[][] InitSolution, double [] avgWeight) {
 		double Obj = 0;
-		double newcost = costObj(V,avgWeight);
-		StopWatch watch = new StopWatch(); 
+		double newcost = costObj(InitSolution,avgWeight);
+		Ship[][] V = new Ship[InitSolution.length][InitSolution[0].length];
+		bestSolution = new Ship[InitSolution.length][InitSolution[0].length];
+		StopWatch watch = new StopWatch();
+		for(int j=0; j<V.length;j++) {
+			for(int i=0;i<V[0].length;i++) {
+					V[j][i] = new Ship(InitSolution[j][i]);
+				}
+		}
+		
+		//newcost = 1000000
 		watch.start();
 		//double elapsedTime = 0;
 		int j = 0;
-		while (j<=1000) {
-			Ship [][] S = new Ship [V.length][V[0].length];
+		while (j<=10000) {
+			Ship [][] S = new Ship [InitSolution.length][InitSolution[0].length];
 			S = Step(V,avgWeight);
-			if (newcost > costObj(S,avgWeight)) {
-				V = S;
-				newcost = costObj(V,avgWeight);
+			double Scost = costObj(S,avgWeight);
+			if (newcost > Scost) {
+				for(int n=0; n<V.length;n++) {
+					for(int i=0;i<V[0].length;i++) {
+						V[n][i] = new Ship(S[n][i]);
+					}
+				}
+				newcost = Scost;
 				System.out.println(newcost);
 			}
 			//elapsedTime = watch.lap();
 			j++;
 		}
 		Obj = newcost;
-		bestSolution = V;
+		for(int n=0; n<V.length;n++) {
+			for(int i=0;i<V[0].length;i++) {
+				bestSolution[n][i] = new Ship(V[n][i]);
+			}
+		}
 		System.out.println("Best solution: " + Obj);
+		/*for(int n = 0; n<InitSolution.length;n++) {
+			for(int i = 0;i<InitSolution[0].length;i++) {
+				System.out.print(bestSolution[n][i].getEndTime() + " ");
+			}
+			System.out.println();
+		}*/
 			
 		return Obj;
 	}
@@ -62,7 +87,11 @@ class HC {
 		for(int i =0; i<V[0].length;i++) {
 			int serviceTime = 0;
 			for(int j=0; j<V.length;j++) {
+				try {
 				serviceTime += V[j][i].getDuration();
+				} catch(NullPointerException e) {
+					serviceTime += 100000;
+				}
 			}
 			weight += serviceTime*avgWeight[i];
 		}
@@ -88,7 +117,11 @@ class HC {
 		for(Ship[][] n: Neighbours) {
 			if (bestcost > costObj(n,avgWeight)){
 				bestcost = costObj(n,avgWeight);
-				best = n;
+				for(int j = 0; j<n.length; j++) {
+					for(int i= 0; i<n[0].length;i++) {
+						best[j][i] = new Ship(n[j][i]);
+					}
+				}
 			}
 		}
 		//System.out.println("HEJ");
@@ -111,7 +144,7 @@ class HC {
 					}
 					if (maxHand<V[j][i].getHandlingTime() && usedShips.contains(V[j][i].getId()) == false) {
 						maxHand = V[j][i].getHandlingTime();
-						tempShip = V[j][i];
+						tempShip = new Ship(V[j][i]);
 					}
 				}
 			}
@@ -128,6 +161,13 @@ class HC {
 			}
 			Ship[][] Vtemp = new Ship [V.length][V[0].length];
 			Vtemp = swapBerth(V,tempShip,bestBerth);
+			tempShip = new Ship(Vtemp[bestBerth][tempShip.getId()]);
+			for (int i = 0; i< Vtemp.length; i++) {
+				Ship [][] VBtemp = new Ship [Vtemp.length][V[0].length];
+				VBtemp = newBerth(Vtemp,tempShip);
+				N.add(VBtemp);
+			}
+			
 			N.add(Vtemp);
 			
 		}
@@ -135,9 +175,14 @@ class HC {
 	}
 	
 	public Ship [][] swapBerth(Ship[][] V,Ship tempShip, int bestBerth){
-		Ship [][] newV = V;
+		Ship [][] newV = new Ship[V.length][V[0].length];
+		for(int j = 0; j<V.length; j++) {
+			for(int i= 0; i<V[0].length;i++) {
+				newV[j][i] = new Ship(V[j][i]);
+			}
+		}
 		Random rand = new Random();
-		rand.setSeed(12345);
+		//rand.setSeed(12345);
 		
 		int randShip = rand.nextInt(V[0].length);
 		
@@ -148,12 +193,12 @@ class HC {
 		//System.out.println(randBerth + " " + randShip);
 		//System.out.println(tempShip.getId() + " " + tempShip.getBerth());
 		
-		Ship swapShip = V[bestBerth][randShip];
+		Ship swapShip = new Ship(V[bestBerth][randShip]);
 		
 		
-		Ship newShip = V[bestBerth][tempShip.getId()];
+		Ship newShip = new Ship(V[bestBerth][tempShip.getId()]);
 		
-		swapShip = V[tempShip.getBerth()][randShip];
+		swapShip = new Ship(V[tempShip.getBerth()][randShip]);
 		
 		newV[tempShip.getBerth()][tempShip.getId()].setDuration(0);
 		newV[tempShip.getBerth()][tempShip.getId()].setWaitingTime(0);
@@ -171,6 +216,40 @@ class HC {
 		
 		return newV;
 		
+	}
+	
+	public Ship[][] newBerth(Ship[][] V, Ship tempShip){
+		Ship[][] newBerthV = new Ship [V.length][V[0].length];
+		for(int j = 0; j<V.length; j++) {
+			for(int i=0; i<V[0].length;i++) {
+				newBerthV[j][i] = new Ship(V[j][i]);
+			}
+		}
+		int tempDura = tempShip.getDuration();
+		boolean improved = false;
+		for(int j = 0; j<V.length;j ++) {
+			Ship newShip = new Ship(tempShip);
+			newShip.setDuration(0);
+			if(j != tempShip.getBerth()) {
+				newShip.setBerth(j);
+				newBerthV = calcnewV(newBerthV,newShip);
+				newBerthV[tempShip.getBerth()][tempShip.getId()].setDuration(0);
+				newBerthV[tempShip.getBerth()][tempShip.getId()].setWaitingTime(0);
+				newBerthV[tempShip.getBerth()][tempShip.getId()].setStartTime(0);
+				newBerthV[tempShip.getBerth()][tempShip.getId()].setEndTime(0);
+				int newShipDura = newBerthV[newShip.getBerth()][newShip.getId()].getDuration();
+				if(newShipDura < tempDura) {
+					tempDura = newShipDura;
+					improved = true;
+				}
+			}	
+		}
+		
+		if(improved) {
+			return newBerthV;
+		} else {
+			return V;
+		}
 	}
 	
 	public Ship [][] calcnewV(Ship[][]V, Ship newShip) {
@@ -255,6 +334,9 @@ class HC {
 					tempWait = 0;
 				tempDura = tempWait+V[newShip.getBerth()][order.get(i)].getHandlingTime();
 				endTime = tempStart + V[newShip.getBerth()][order.get(i)].getHandlingTime();
+				if(endTime > V[newShip.getBerth()][order.get(i)].getEndBerth()) {
+					tempDura = 1000000;
+				}
 				newV[newShip.getBerth()][order.get(i)].setStartTime(tempStart);
 				newV[newShip.getBerth()][order.get(i)].setWaitingTime(tempWait);
 				newV[newShip.getBerth()][order.get(i)].setDuration(tempDura);
